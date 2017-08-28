@@ -18,25 +18,46 @@ public class ConfigReader {
 	public int nodeSize=3;
 	
 		
-	public String RandomNode() throws FileNotFoundException, IOException
+	public String getRandomNode(int port) throws FileNotFoundException, IOException
 	{
-		
-		
+	
 		this.readTheAllNodes();
 		
-		Random m = new Random();
+		String foundNode = "";
 		
+		Boolean isportFound=false;
 		
-		int  num= m.nextInt(nodeSize);
+		while(!isportFound)
+		{
+			
+			Random m = new Random();
+				
+			int  num= m.nextInt(nodeSize);
+			
+			String strNode = this.nodeList.get(num);
+			
+			String strSplit []= strNode.split(" ");
+			
+			int configPort = Integer.parseInt(strSplit[1]);
+			
+			if(configPort != port)
+			{
+				isportFound = true;
+				foundNode = strNode;
+			}
+			
+			
+			
+		}
 		
-	
-		return this.nodeList.get(num);
+		return foundNode;
+		
 	}
 	
 	
 	public void  readTheAllNodes() throws FileNotFoundException, IOException
 	{
-		nodeList=new ArrayList<String>();
+		this.nodeList=new ArrayList<String>();
 		try (
 
 		   // System.out.println(directory.getAbsolutePath().toString());
@@ -58,20 +79,5 @@ public class ConfigReader {
 		
 	}
 	
-
-	
-	public static void main(String[] args) throws IOException {
-		ConfigReader cr = new ConfigReader();
-	
-		for(int i=0;i<5;i++)
-		{
-	     	System.out.println(cr.RandomNode());
-		}
-		
-		
-		
-		
-		
-	}
 	
 }

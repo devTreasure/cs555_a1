@@ -61,10 +61,15 @@ public class ConfigReader {
 		try (
 
 		   // System.out.println(directory.getAbsolutePath().toString());
-		    InputStream fis = new FileInputStream("Config.txt");
+				
+				
+		    InputStream fis = new FileInputStream("D:\\cs555\\assignment\\cs555_a1\\Config.txt");
+		
 		    InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
 		    BufferedReader br = new BufferedReader(isr);
-		) 
+		)
+		
+		
 		{
 		    while ((line = br.readLine()) != null) {
 		        // Deal with the line
@@ -78,6 +83,15 @@ public class ConfigReader {
 		//return nodeList;
 		
 	}
+	/*
+	public static void main(String[] args) throws FileNotFoundException, IOException 
+	{
+		
+		
+		ConfigReader cr = new ConfigReader();
+		cr.readTheAllNodes();
 	
+	}
+	*/
 	
 }

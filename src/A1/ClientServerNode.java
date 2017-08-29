@@ -21,8 +21,8 @@ public class ClientServerNode implements Runnable {
 
 	public ServerSocket serversocket;
 	public Socket socket;
-	public String receverIP;
-	public int  receverPort;
+	public String receiverNodeIP;
+	public int  receiverNodePORT;
 	public int nodePort;
 	public static final String EXIT_COMMAND = "exit";
 	public String nodeName;
@@ -82,7 +82,7 @@ public class ClientServerNode implements Runnable {
 	public  void sendMessages() throws IOException {
 		// TODO Auto-generated method stub
 		
-		Socket socket = new Socket(this.receverIP, this.receverPort);		
+		Socket socket = new Socket(this.receiverNodeIP, this.receiverNodePORT);		
 		
 		DataOutputStream dout = new DataOutputStream(socket.getOutputStream());
 
@@ -110,7 +110,7 @@ public class ClientServerNode implements Runnable {
 
 		dout.flush();
 		
-		socket.close();
+		//socket.close();
 		
 	}
 
@@ -205,8 +205,8 @@ public class ClientServerNode implements Runnable {
 		String  messageSenderNode=  node.ranodmNodeSelection(port);
 		String[] SplitStrmessageSenderNode = messageSenderNode.split(" ");
 		
-		node.receverIP = SplitStrmessageSenderNode[0];
-		node.receverPort = Integer.parseInt(SplitStrmessageSenderNode[1]);
+		node.receiverNodeIP = SplitStrmessageSenderNode[0];
+		node.receiverNodePORT = Integer.parseInt(SplitStrmessageSenderNode[1]);
 		
 		node.intializeClientServerNode(port);
 		Thread thread = new Thread(node);

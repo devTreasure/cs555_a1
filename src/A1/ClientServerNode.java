@@ -43,7 +43,7 @@ public class ClientServerNode implements Runnable {
 		this.nodeIP = (ip.getHostAddress()).trim();
 
 		System.out.println("Node Name : " + this.nodeName + "IP: " + this.nodeIP
-				+ ", Listenning on : " + this.nodePort);
+				+ ", Listenning on : " + this.nodePort + "  Selected sender Node:" + this.receiverNodeIP + " and Port : "+ this.receiverNodePORT) ;
 	}
 
 	@Override
@@ -205,6 +205,7 @@ public class ClientServerNode implements Runnable {
 		ClientServerNode node = new ClientServerNode();
 
 
+		//Selecting Random node for sending Messages
 		
 		String  messageSenderNode=  node.ranodmNodeSelection(port);
 		String[] SplitStrmessageSenderNode = messageSenderNode.split(" ");

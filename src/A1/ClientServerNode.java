@@ -27,6 +27,7 @@ public class ClientServerNode implements Runnable {
 	public static final String EXIT_COMMAND = "exit";
 	public String nodeName;
 	public String nodeIP;
+	public int totalROUNDS=5;
 	
 
 	public ClientServerNode() {
@@ -85,10 +86,13 @@ public class ClientServerNode implements Runnable {
 		Socket socket = new Socket(this.receiverNodeIP, this.receiverNodePORT);		
 		
 		DataOutputStream dout = new DataOutputStream(socket.getOutputStream());
+		
+		for(int i=0;i<=this.totalROUNDS;i++)
+		{
 
 		int randomN = Payload.GetTheRandomNumeber();
 		
-		System.out.println("Random number generated as a payLoad is ");
+		System.out.println("Random number generated at the client-payLoad is ");
 		System.out.println(randomN);
 
 		// 1 .RANDOM NUMBER
@@ -109,7 +113,7 @@ public class ClientServerNode implements Runnable {
 		dout.write(strinMessageBytes);
 
 		dout.flush();
-		
+		}
 		//socket.close();
 		
 	}
@@ -144,7 +148,7 @@ public class ClientServerNode implements Runnable {
 
 					int radnomNUmertype = din.readInt();
 
-					System.out.println(String.format("server random number is : %1$d ", radnomNUmertype));
+					System.out.println(String.format("server has received the random number : %1$d ", radnomNUmertype));
 
 					int identifierLength = din.readInt();
 					byte[] identifierBytes = new byte[identifierLength];

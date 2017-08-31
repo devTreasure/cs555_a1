@@ -28,6 +28,8 @@ public class ClientServerNode implements Runnable {
 	public String nodeName;
 	public String nodeIP;
 	public int totalROUNDS=5;
+	public int sendCounter = 0;
+	public int receiveCounter = 0;
 	
 
 	public ClientServerNode() {
@@ -142,10 +144,9 @@ public class ClientServerNode implements Runnable {
 			try {
 
 				while (din.available() > 0) // We dont want to read when available bytes are zero, to avoid EOF
-									// exception
-
+				// exception
 				{
-
+					this.receiveCounter += 1;
 					int radnomNUmertype = din.readInt();
 
 					System.out.println(String.format("server has received the random number : %1$d ", radnomNUmertype));

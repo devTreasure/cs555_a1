@@ -34,14 +34,17 @@ public class Collator implements Runnable {
 		// creating object
 
 		
-		if (args.length < 1) {
+		if (args.length <= 1) {
 			System.out.println("Error: Please pass the IP --SPACE-- UNIQUE PORT number for the Collator OTHER THAN CONFIG");
 			System.exit(0);
 		}
 
-		String strIPPort = "";
+		String strIP = "";
+		int nodePort=0;
 		try {
-			strIPPort = (args[0]);
+			strIP = (args[0]);
+			nodePort=   Integer.parseInt(args[1]);
+			
 		} catch (Exception e) {
 			System.out.println("Error: Please provide IP AND PORT for the collator.");
 			System.exit(0);
@@ -49,7 +52,7 @@ public class Collator implements Runnable {
 
 		String[] strSplit = null;
 		// TODO Auto-generated method stub
-		strSplit = strIPPort.split(" ");
+		//strSplit = strIP.split(",");
 		/*
 		System.out.println(
 				"************************************\n 1.) Please select the ip SPACE port and enter in one line.\n 2.)"
@@ -68,8 +71,8 @@ public class Collator implements Runnable {
 		//String  messageSenderNode=  node.ranodmNodeSelection(port);
 		//String[] SplitStrmessageSenderNode = messageSenderNode.split(" ");
 		
-		collatorNode.collatorIP = strSplit[0];
-		collatorNode.collatorPORT = Integer.parseInt(strSplit[1]);
+		collatorNode.collatorIP = strIP;
+		collatorNode.collatorPORT = nodePort;
 		
 		collatorNode.intializeClientServerNode(collatorNode.collatorPORT);
 		Thread thread = new Thread(collatorNode);

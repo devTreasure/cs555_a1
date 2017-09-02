@@ -30,6 +30,8 @@ public class ClientServerNode implements Runnable {
 	public int totalROUNDS=5;
 	public int sendCounter = 0;
 	public int receiveCounter = 0;
+	public int collatorPort=0;
+	public String collatorIP ="";
 	
 
 	public ClientServerNode() {
@@ -45,7 +47,8 @@ public class ClientServerNode implements Runnable {
 		this.nodeIP = (ip.getHostAddress()).trim();
 
 		System.out.println("Node Name : " + this.nodeName + "IP: " + this.nodeIP
-				+ ", Listenning on : " + this.nodePort + "  Selected sender Node:" + this.receiverNodeIP + " and Port : "+ this.receiverNodePORT) ;
+					+ ", Listenning on : " + this.nodePort + "  Selected sender Node:" + this.receiverNodeIP + " and Port : "+ this.receiverNodePORT + " "
+					+ " Collator IP: " + this.collatorIP + " and Port : " + this.collatorPort);
 	}
 
 	@Override
@@ -77,16 +80,41 @@ public class ClientServerNode implements Runnable {
 	}
 
 
+	public void sendTrafficSummary(Socket socket) throws IOException
+	{
+		DataOutputStream dout = new DataOutputStream(socket.getOutputStream());
+		
 
-	public void trafficSummary() {
-		// print node statistics
-	}
 	
-	public  void sendMessages() throws IOException {
-		// TODO Auto-generated method stub
 		
-		Socket socket = new Socket(this.receiverNodeIP, this.receiverNodePORT);		
+		System.out.println("total messages received at this node is ");
+		System.out.println(this.receiveCounter);
+
+		// 1 .RANDOM NUMBER
+
+		dout.writeInt(this.receiveCounter);
+
+		String thisisMessage = "Messages recevied,by this Node";
+
+		byte[] strinMessageBytes = thisisMessage.getBytes();
+
+		int elementLength = strinMessageBytes.length;
+
+		// 2 . STRING length
+		dout.writeInt(elementLength);
+
+		// 3. String message
+
+		dout.write(strinMessageBytes);
+
+		dout.flush();
 		
+		
+	}
+
+	
+	public void LoopMessaging(Socket socket) throws IOException
+	{
 		DataOutputStream dout = new DataOutputStream(socket.getOutputStream());
 		
 		for(int i=0;i<=this.totalROUNDS;i++)
@@ -118,6 +146,24 @@ public class ClientServerNode implements Runnable {
 		}
 		//socket.close();
 		
+		
+	}
+	public  void sendMessages(String strMessage) throws IOException {
+		
+		Socket socket =null;
+		
+		if(strMessage=="message")
+		{
+			socket= new Socket(this.receiverNodeIP, this.receiverNodePORT);	
+			LoopMessaging(socket);
+		}
+		else if(strMessage=="trafic") {
+			socket= new Socket(this.collatorIP, this.collatorPort);		
+			sendTrafficSummary(socket);
+		}
+		
+		
+
 	}
 
 	public void recevieMessge() throws IOException {
@@ -176,15 +222,19 @@ public class ClientServerNode implements Runnable {
 	public static void main(String[] args) throws IOException {
 
 		// creating object
+		int collatorPORT=0;
+		String StrCollatorIP="";
 
-		if (args.length < 1) {
-			System.out.println("Error: Please pass the UNIQUE  port number as listed in the config");
+		if (args.length < 3) {
+			System.out.println("Error: Please pass the UNIQUE  port number as listed in the config,IP port for Collator");
 			System.exit(0);
 		}
 
 		int port = 0;
 		try {
 			port = Integer.parseInt(args[0]);
+			StrCollatorIP =args[1];
+			collatorPORT=Integer.parseInt(args[2]);
 		} catch (Exception e) {
 			System.out.println("Error: Please provide numneric argument.");
 			System.exit(0);
@@ -201,7 +251,7 @@ public class ClientServerNode implements Runnable {
 						+ "\n 7.) Enter \"EXIT\" to exit  and stop the node \n****************************************");
 		 */
 		
-		System.out.println("Enter \"Start/start\" to intiate message sending ");
+		System.out.println("Enter \"Start/start\" to intiate message sending  OR \"pull-traffic-summary\" ");
 		
 		ClientServerNode node = new ClientServerNode();
 
@@ -211,8 +261,11 @@ public class ClientServerNode implements Runnable {
 		String  messageSenderNode=  node.ranodmNodeSelection(port);
 		String[] SplitStrmessageSenderNode = messageSenderNode.split(" ");
 		
+		//putting collator IP and PORT
 		node.receiverNodeIP = SplitStrmessageSenderNode[0];
 		node.receiverNodePORT = Integer.parseInt(SplitStrmessageSenderNode[1]);
+		node.collatorPort=collatorPORT;
+		node.collatorIP= StrCollatorIP;
 		
 		node.intializeClientServerNode(port);
 		Thread thread = new Thread(node);
@@ -229,10 +282,12 @@ public class ClientServerNode implements Runnable {
 				System.out.println("Exiting.");
 				continueOperations = false;
 			} else if ("start".equalsIgnoreCase(exitStr)) {
-					node.sendMessages();
-			 }
+					
+			 node.sendMessages("message");
+			
+			}			
 			else if ("pull-traffic-summary".equalsIgnoreCase(exitStr)) {
-				node.trafficSummary();
+				node.sendMessages("traffic");;
 			}
 		}
 

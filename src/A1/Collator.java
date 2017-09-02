@@ -65,10 +65,10 @@ public class Collator implements Runnable {
 		
 		Collator collatorNode = new Collator();
 
-
 		//Selecting Random node for sending Messages
 		
 		//String  messageSenderNode=  node.ranodmNodeSelection(port);
+		
 		//String[] SplitStrmessageSenderNode = messageSenderNode.split(" ");
 		
 		collatorNode.collatorIP = strIP;

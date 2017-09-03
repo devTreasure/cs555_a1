@@ -109,7 +109,7 @@ public class ClientServerNode implements Runnable {
 
 		dout.flush();
 		
-		
+		socket.close();
 	}
 
 	
@@ -119,7 +119,8 @@ public class ClientServerNode implements Runnable {
 		
 		for(int i=0;i<=this.totalROUNDS;i++)
 		{
-
+			
+		this.receiveCounter+=1;
 		int randomN = Payload.GetTheRandomNumeber();
 		
 		System.out.println("Random number generated at the client-payLoad is ");
@@ -144,7 +145,8 @@ public class ClientServerNode implements Runnable {
 
 		dout.flush();
 		}
-		//socket.close();
+		
+		socket.close();
 		
 		
 	}
@@ -157,7 +159,7 @@ public class ClientServerNode implements Runnable {
 			socket= new Socket(this.receiverNodeIP, this.receiverNodePORT);	
 			LoopMessaging(socket);
 		}
-		else if(strMessage=="trafic") {
+		else if(strMessage=="traffic") {
 			socket= new Socket(this.collatorIP, this.collatorPort);		
 			sendTrafficSummary(socket);
 		}
@@ -178,7 +180,6 @@ public class ClientServerNode implements Runnable {
 			 */
 
 			// byte[] marshalledBytes =new byte[1000];
-
 			// ByteArrayInputStream baInputStream = new
 			// ByteArrayInputStream(marshalledBytes);
 			socket = serversocket.accept();

@@ -63,7 +63,7 @@ public class ConfigReader {
 		   // System.out.println(directory.getAbsolutePath().toString());
 				
 				
-		    InputStream fis = new FileInputStream("D:\\cs555\\assignment\\cs555_a1\\Config.txt");
+		    InputStream fis = new FileInputStream("H:\\AS1_v2\\src\\A1\\Config.txt");
 		
 		    InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
 		    BufferedReader br = new BufferedReader(isr);

@@ -1,8 +1,6 @@
 package A1;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileNotFoundException;
@@ -12,7 +10,6 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.Scanner;
 
 public class ClientServerNode implements Runnable {
 
@@ -32,21 +29,24 @@ public class ClientServerNode implements Runnable {
 	public int receiveCounter = 0;
 	public int collatorPort=0;
 	public String collatorIP ="";
+	public ClientServerNode clientServerNode;
+	public ReceiverWorker Rworker;
 	
 
 	public ClientServerNode() {
-
+		
 	}
 
 	public void intializeClientServerNode(int port) throws IOException {
 		System.out.println("initializing ClientServer Node....");
-		this.nodeName = "ClientServer-Node";
+	
 		this.serversocket = new ServerSocket(port);
 		this.nodePort = port;
 		InetAddress ip = InetAddress.getLocalHost();
 		this.nodeIP = (ip.getHostAddress()).trim();
+		this.nodeName =  this.nodeIP+":"+  this.nodePort;
 
-		System.out.println("Node Name : " + this.nodeName + "IP: " + this.nodeIP
+		System.out.println("Node Name : " + this.nodeName + "  IP: " + this.nodeIP
 					+ ", Listenning on : " + this.nodePort + "  Selected sender Node:" + this.receiverNodeIP + " and Port : "+ this.receiverNodePORT + " "
 					+ " Collator IP: " + this.collatorIP + " and Port : " + this.collatorPort);
 	}
@@ -80,36 +80,41 @@ public class ClientServerNode implements Runnable {
 	}
 
 
-	public void sendTrafficSummary(Socket socket) throws IOException
+	public void sendReceiveTrafficSummary(Socket socket) throws IOException
 	{
-		DataOutputStream dout = new DataOutputStream(socket.getOutputStream());
+		DataOutputStream dout = new DataOutputStream(socket.getOutputStream());	
 		
-
-	
+		System.out.println(" total messages received at : " + this.nodeName);
+		System.out.println(this.Rworker.receiveCounter);
 		
-		System.out.println("total messages received at this node is ");
-		System.out.println(this.receiveCounter);
+		
+		//flushing this number to Collator		
+		dout.writeInt(this.Rworker.receiveCounter);
+		
+		
+		dout.writeInt(this.clientServerNode.sendCounter);
 
-		// 1 .RANDOM NUMBER
-
-		dout.writeInt(this.receiveCounter);
-
-		String thisisMessage = "Messages recevied,by this Node";
+		/*
+		String thisisMessage = "Messages recevied, by :  " + this.nodeName;
 
 		byte[] strinMessageBytes = thisisMessage.getBytes();
 
 		int elementLength = strinMessageBytes.length;
 
-		// 2 . STRING length
+	
 		dout.writeInt(elementLength);
 
-		// 3. String message
-
+	
 		dout.write(strinMessageBytes);
+		*/
+		
 
 		dout.flush();
 		
 		socket.close();
+		
+		
+		
 	}
 
 	
@@ -120,10 +125,12 @@ public class ClientServerNode implements Runnable {
 		for(int i=0;i<=this.totalROUNDS;i++)
 		{
 			
-		this.receiveCounter+=1;
+		this.sendCounter+=1;
+		
 		int randomN = Payload.GetTheRandomNumeber();
 		
 		System.out.println("Random number generated at the client-payLoad is ");
+		
 		System.out.println(randomN);
 
 		// 1 .RANDOM NUMBER
@@ -149,6 +156,8 @@ public class ClientServerNode implements Runnable {
 		socket.close();
 		
 		
+		
+		
 	}
 	public  void sendMessages(String strMessage) throws IOException {
 		
@@ -161,7 +170,7 @@ public class ClientServerNode implements Runnable {
 		}
 		else if(strMessage=="traffic") {
 			socket= new Socket(this.collatorIP, this.collatorPort);		
-			sendTrafficSummary(socket);
+			sendReceiveTrafficSummary(socket);
 		}
 		
 		
@@ -182,6 +191,12 @@ public class ClientServerNode implements Runnable {
 			// byte[] marshalledBytes =new byte[1000];
 			// ByteArrayInputStream baInputStream = new
 			// ByteArrayInputStream(marshalledBytes);
+			ReceiverWorker rv;
+			rv= new ReceiverWorker(serversocket.accept(),this.clientServerNode ); // Passing same object that we created on main Thread to recevierWorkerThread.
+			Thread recevierworkerThread = new Thread(rv);
+			this.Rworker=rv;   //We need to get hold of received numbers count
+			recevierworkerThread.start();
+			/*
 			socket = serversocket.accept();
 			System.out.println(".....Connection has established....");
 			System.out.println("...................................");
@@ -212,7 +227,7 @@ public class ClientServerNode implements Runnable {
 			catch (Exception e) {
 				System.out.println(e.toString());
 			}
-
+       */
 		}
 
 		// baInputStream.close();
@@ -255,7 +270,7 @@ public class ClientServerNode implements Runnable {
 		System.out.println("Enter \"Start/start\" to intiate message sending  OR \"pull-traffic-summary\" ");
 		
 		ClientServerNode node = new ClientServerNode();
-
+		node.clientServerNode=node;
 
 		//Selecting Random node for sending Messages
 		

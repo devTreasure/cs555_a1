@@ -131,18 +131,24 @@ public class Collator implements Runnable {
 
 				while (din.available() > 0) // We dont want to read when available bytes are zero, to avoid EOF
 				// exception
-				{
-				
-					int radnomNUmertype = din.readInt();
+				{			
+					
+					int receviedCounter = din.readInt();
+					int sendCounter = din.readInt();
 
-					System.out.println(String.format("server has received the random number : %1$d ", radnomNUmertype));
-
+					//System.out.println(String.format("server has received the random number : %1$d ", radnomNUmertype));
+					System.out.println("Message received : " + receviedCounter);
+					
+					System.out.println("Message sent :  " + sendCounter );
+					
+					/*
 					int identifierLength = din.readInt();
 					byte[] identifierBytes = new byte[identifierLength];
 					din.readFully(identifierBytes);
 					String identifier = new String(identifierBytes);
 
 					System.out.println(identifier);
+					*/
 				}
 			} catch (SocketException ex) {
 				System.out.println(ex.toString());

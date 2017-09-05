@@ -13,6 +13,7 @@ import java.util.Random;
 
 
 public class ConfigReader {
+	
 	public  String line;
 	public ArrayList<String> nodeList;
 	public int nodeSize=3;

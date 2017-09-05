@@ -1,6 +1,7 @@
 package A1;
 
 import java.io.DataInputStream;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
@@ -8,23 +9,28 @@ public class ReceiverWorker  implements Runnable{
 	public Socket socket;
 	public int receiveCounter = 0;
 	public ClientServerNode clientServeNode;
-	public ReceiverWorker(Socket sc , ClientServerNode cv)
+	public ServerSocket serverSocket;
+	public ReceiverWorker(ServerSocket sc,  ClientServerNode cv)
 	{
-		this.socket=sc;
+		this.serverSocket=sc;
 		this.clientServeNode=cv;
 		
 	}
 
 	@Override
 	public void run() {
-		
+
 		// TODO Auto-generated method stub
 		while(true)
 		{
-			System.out.println(".....Connection has established....");
-			System.out.println("...................................");
-			
+	
 			try {
+
+				this.socket =this.serverSocket.accept();
+				
+				System.out.println(".....Connection has established....");
+				System.out.println("...................................");
+				
 				DataInputStream din = new DataInputStream(this.socket.getInputStream());
 
 
@@ -43,6 +49,8 @@ public class ReceiverWorker  implements Runnable{
 
 					System.out.println(identifier);
 				}
+				din.close();
+				this.socket.close();
 			} catch (SocketException ex) {
 				System.out.println(ex.toString());
 			}

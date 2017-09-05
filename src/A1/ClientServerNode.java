@@ -111,7 +111,7 @@ public class ClientServerNode implements Runnable {
 
 		dout.flush();
 		
-		socket.close();
+		//socket.close();
 		
 		
 		
@@ -153,7 +153,7 @@ public class ClientServerNode implements Runnable {
 		dout.flush();
 		}
 		
-		socket.close();
+		//socket.close();
 		
 		
 		
@@ -177,11 +177,11 @@ public class ClientServerNode implements Runnable {
 
 	}
 
-	public void recevieMessge() throws IOException {
+	public void recevieMessge()  throws IOException {
 
 		// Socket s = this.serversocket.accept();// establishes connection
 
-		while (true) {
+		//while (true) {
 
 			/*
 			 * DataInputStream dis = new DataInputStream(s.getInputStream()); String str =
@@ -192,7 +192,7 @@ public class ClientServerNode implements Runnable {
 			// ByteArrayInputStream baInputStream = new
 			// ByteArrayInputStream(marshalledBytes);
 			ReceiverWorker rv;
-			rv= new ReceiverWorker(serversocket.accept(),this.clientServerNode ); // Passing same object that we created on main Thread to recevierWorkerThread.
+			rv= new ReceiverWorker(this.serversocket, this.clientServerNode); // Passing same object that we created on main Thread to recevierWorkerThread.
 			Thread recevierworkerThread = new Thread(rv);
 			this.Rworker=rv;   //We need to get hold of received numbers count
 			recevierworkerThread.start();
@@ -228,7 +228,8 @@ public class ClientServerNode implements Runnable {
 				System.out.println(e.toString());
 			}
        */
-		}
+			
+		//}
 
 		// baInputStream.close();
 		// din.close();
@@ -255,7 +256,7 @@ public class ClientServerNode implements Runnable {
 			System.out.println("Error: Please provide numneric argument.");
 			System.exit(0);
 		}
-
+		
 		String[] strSplit = null;
 		// TODO Auto-generated method stub
 		

@@ -74,24 +74,24 @@ public class CollatorWorker implements Runnable {
 
       String name;
       int sentMessagesCounter;
-      double sumOfPayload;
+      double sumOfSentPayload;
       int receivedMessagesCounter;
-      double receivedsumOfPayload;
+      double sumOfReceivedPayload;
       
       public Data(String name, int sentMessagesCounter, double sumOfPayload, int receivedMessagesCounter, double receivedsumOfPayload) {
          this.name = name;
          this.sentMessagesCounter = sentMessagesCounter;
-         this.sumOfPayload = sumOfPayload;
+         this.sumOfSentPayload = sumOfPayload;
          this.receivedMessagesCounter = receivedMessagesCounter;
-         this.receivedsumOfPayload = receivedsumOfPayload;
+         this.sumOfReceivedPayload = receivedsumOfPayload;
       }
 
       @Override
       public String toString() {
          return "Data [name=" + name + ", sentMessagesCounter=" + sentMessagesCounter
-               + ", sumOfPayload=" + sumOfPayload + ", receivedMessagesCounter="
-               + receivedMessagesCounter + ", receivedsumOfPayload=" + receivedsumOfPayload + "]";
-      }
+               + ", sumOfSentPayload=" + sumOfSentPayload + ", receivedMessagesCounter="
+               + receivedMessagesCounter + ", sumOfReceivedPayload=" + sumOfReceivedPayload + "]";
+      }      
       
    }
 

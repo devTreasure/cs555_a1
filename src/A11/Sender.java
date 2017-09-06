@@ -4,8 +4,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-import A1.Payload;
-
 public class Sender {
 
    private int sendCounter = 0;

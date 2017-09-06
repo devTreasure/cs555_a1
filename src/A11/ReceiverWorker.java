@@ -9,8 +9,8 @@ public class ReceiverWorker implements Runnable {
 
    private ServerSocket serverSocket;
    private Node node;
-   private int receiveCounter;
-   private double payloadTotal;
+   
+   private ReceiverData receiverData = new ReceiverData();
 
    public ReceiverWorker(ServerSocket sc, Node node) {
       this.serverSocket = sc;
@@ -29,9 +29,11 @@ public class ReceiverWorker implements Runnable {
             din = new DataInputStream(socket.getInputStream());
 
             for (int i = 0; i < Node.EACH_ROUNDS; i++) {
-               this.receiveCounter += 1;
                int radnomNUmertype = din.readInt();
-               payloadTotal += radnomNUmertype;
+               synchronized (receiverData) {
+                  receiverData.receiveCounter += 1;
+                  receiverData.payloadTotal += radnomNUmertype;
+               }
                System.out.println(String.format("server has received the random number : %1$d ", radnomNUmertype));
             }
 
@@ -52,11 +54,16 @@ public class ReceiverWorker implements Runnable {
    }
 
    public int getReceiveCounter() {
-      return receiveCounter;
+      return receiverData.receiveCounter;
    }
 
    public double getPayloadTotal() {
-      return payloadTotal;
+      return receiverData.payloadTotal;
+   }
+   
+   class ReceiverData {
+      int receiveCounter;
+      double payloadTotal;
    }
    
 }

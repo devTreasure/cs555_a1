@@ -1,3 +1,3 @@
-localhost 60005
-localhost 60007
-localhost 60009
+localhost 6005
+localhost 6007
+localhost 6009
